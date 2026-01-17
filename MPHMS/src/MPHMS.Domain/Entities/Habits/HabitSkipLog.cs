@@ -26,15 +26,14 @@ namespace MPHMS.Domain.Entities.Habits
     ///
     /// Relationship:
     /// -------------
-    /// ONE HabitLog -> ZERO or ONE SkipReason
+    /// ONE HabitLog -> ZERO or ONE HabitSkipLog
+    /// ONE SkipReason -> MANY HabitSkipLogs
     /// </summary>
     public class HabitSkipLog : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: HabitSkipLogs.SkipLogId
-        /// </summary>
-        public Guid SkipLogId { get; set; }
+        // ----------------------------------------
+        // Foreign Keys
+        // ----------------------------------------
 
         /// <summary>
         /// Foreign Key to HabitLog
@@ -46,6 +45,10 @@ namespace MPHMS.Domain.Entities.Habits
         /// Foreign Key to SkipReason lookup
         /// </summary>
         public int ReasonId { get; set; }
+
+        // ----------------------------------------
+        // Business Data
+        // ----------------------------------------
 
         /// <summary>
         /// Optional user comment
@@ -63,5 +66,10 @@ namespace MPHMS.Domain.Entities.Habits
         /// Reference to HabitLog
         /// </summary>
         public HabitLog HabitLog { get; set; } = null!;
+
+        /// <summary>
+        /// Reference to SkipReason lookup
+        /// </summary>
+        public SkipReason SkipReason { get; set; } = null!;
     }
 }

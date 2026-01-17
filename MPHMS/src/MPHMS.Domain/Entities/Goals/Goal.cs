@@ -29,11 +29,11 @@ namespace MPHMS.Domain.Entities.Goals
     /// </summary>
     public class Goal : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: Goals.GoalId
-        /// </summary>
-        public Guid GoalId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// Maps to: Goals.GoalId
+        // /// </summary>
+        // public Guid GoalId { get; set; }
 
         /// <summary>
         /// Foreign key reference to UserProfile
@@ -78,6 +78,9 @@ namespace MPHMS.Domain.Entities.Goals
         /// <summary>
         /// Navigation collection of milestones
         /// </summary>
+
+        public GoalCategory? Category { get; set; }
+        
         public ICollection<Milestone> Milestones { get; set; }
             = new List<Milestone>();
 

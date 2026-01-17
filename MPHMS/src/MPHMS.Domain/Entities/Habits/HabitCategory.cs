@@ -28,11 +28,11 @@ namespace MPHMS.Domain.Entities.Habits
     /// </summary>
     public class HabitCategory : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: HabitCategories.CategoryId
-        /// </summary>
-        public Guid CategoryId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// Maps to: HabitCategories.CategoryId
+        // /// </summary>
+        // public Guid CategoryId { get; set; }
 
         /// <summary>
         /// Display name of the category

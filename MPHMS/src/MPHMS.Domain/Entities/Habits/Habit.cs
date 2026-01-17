@@ -29,11 +29,11 @@ namespace MPHMS.Domain.Entities.Habits
     /// </summary>
     public class Habit : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: Habits.HabitId
-        /// </summary>
-        public Guid HabitId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// Maps to: Habits.HabitId
+        // /// </summary>
+        // public Guid HabitId { get; set; }
 
         /// <summary>
         /// Owner of the habit
@@ -64,5 +64,12 @@ namespace MPHMS.Domain.Entities.Habits
         /// Maps to HabitStatusLookup table
         /// </summary>
         public int Status { get; set; }
+
+         // Navigation
+
+        public HabitCategory? Category { get; set; }
+
+        public ICollection<HabitLog> Logs { get; set; } = new List<HabitLog>();
+   
     }
 }

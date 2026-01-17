@@ -31,9 +31,9 @@ namespace MPHMS.Infrastructure.Persistence
     ///
     /// This is the ONLY class that communicates directly with SQL Server.
     /// </summary>
-    public class ApplicationDbContext 
-        : IdentityDbContext<ApplicationUser, 
-                            Microsoft.AspNetCore.Identity.IdentityRole<Guid>, 
+    public class ApplicationDbContext
+        : IdentityDbContext<ApplicationUser,
+                            Microsoft.AspNetCore.Identity.IdentityRole<Guid>,
                             Guid>
     {
         /// <summary>
@@ -57,6 +57,8 @@ namespace MPHMS.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // Apply all IEntityTypeConfiguration automatically
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
             // ---------------------------------------------------------
             // Apply GLOBAL soft-delete filter

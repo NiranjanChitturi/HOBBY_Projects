@@ -28,11 +28,11 @@ namespace MPHMS.Domain.Entities.Habits
     /// </summary>
     public class SkipReason : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: SkipReasons.ReasonId
-        /// </summary>
-        public int ReasonId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// Maps to: SkipReasons.ReasonId
+        // /// </summary>
+        // public int ReasonId { get; set; }
 
         /// <summary>
         /// Unique short code

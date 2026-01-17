@@ -25,6 +25,8 @@ namespace MPHMS.Domain.Common
     /// </summary>
     public abstract class BaseAuditableEntity
     {
+           public Guid Id { get; set; }
+
         /// <summary>
         /// Timestamp when the record was created.
         ///

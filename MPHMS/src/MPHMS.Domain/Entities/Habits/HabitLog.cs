@@ -32,11 +32,11 @@ namespace MPHMS.Domain.Entities.Habits
     /// </summary>
     public class HabitLog : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: HabitLogs.LogId
-        /// </summary>
-        public Guid LogId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// Maps to: HabitLogs.LogId
+        // /// </summary>
+        // public Guid LogId { get; set; }
 
         /// <summary>
         /// Foreign Key to Habit
@@ -76,5 +76,7 @@ namespace MPHMS.Domain.Entities.Habits
         /// Navigation reference to parent Habit
         /// </summary>
         public Habit Habit { get; set; } = null!;
+        
+        public HabitSkipLog? SkipLog { get; set; }
     }
 }

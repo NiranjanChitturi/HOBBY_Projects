@@ -29,10 +29,10 @@ namespace MPHMS.Domain.Entities.Goals
     /// </summary>
     public class Milestone : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// </summary>
-        public Guid MilestoneId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// </summary>
+        // public Guid MilestoneId { get; set; }
 
         /// <summary>
         /// Foreign key reference to parent Goal
@@ -58,6 +58,10 @@ namespace MPHMS.Domain.Entities.Goals
         /// When milestone was completed
         /// </summary>
         public DateTime? CompletedAt { get; private set; }
+        
+        // Navigation
+        public Goal Goal { get; set; } = null!;
+
 
         // -------------------------------
         // Domain Behavior

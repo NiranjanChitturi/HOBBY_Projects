@@ -25,11 +25,11 @@ namespace MPHMS.Domain.Entities.Goals
     /// </summary>
     public class GoalCategory : BaseAuditableEntity
     {
-        /// <summary>
-        /// Primary Key
-        /// Maps to: GoalCategories.CategoryId
-        /// </summary>
-        public Guid CategoryId { get; set; }
+        // /// <summary>
+        // /// Primary Key
+        // /// Maps to: GoalCategories.CategoryId
+        // /// </summary>
+        // public Guid CategoryId { get; set; }
 
         /// <summary>
         /// Category display name
