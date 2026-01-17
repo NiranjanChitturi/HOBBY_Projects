@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MPHMS.Infrastructure.Identity;
 using MPHMS.Infrastructure.Persistence;
 using System;
+using MPHMS.Application.Repositories;
+using MPHMS.Infrastructure.Persistence.Repositories;
 
 namespace MPHMS.Infrastructure.DependencyInjection
 {
@@ -57,6 +59,13 @@ namespace MPHMS.Infrastructure.DependencyInjection
                             errorNumbersToAdd: null);
                     });
             });
+// ------------------------------------------------------
+// Repository & Unit Of Work Registration
+// ------------------------------------------------------
+
+services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
+services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // ------------------------------------------------------
             // Identity Configuration
