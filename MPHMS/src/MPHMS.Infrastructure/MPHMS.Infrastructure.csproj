@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MPHMS.Domain\MPHMS.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

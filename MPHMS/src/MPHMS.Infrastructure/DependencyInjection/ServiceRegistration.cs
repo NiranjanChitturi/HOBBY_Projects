@@ -62,24 +62,42 @@ namespace MPHMS.Infrastructure.DependencyInjection
             // Identity Configuration
             // ------------------------------------------------------
 
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            // services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+            // {
+            //     // Password policy
+            //     options.Password.RequireDigit = true;
+            //     options.Password.RequiredLength = 8;
+            //     options.Password.RequireUppercase = true;
+            //     options.Password.RequireLowercase = true;
+            //     options.Password.RequireNonAlphanumeric = false;
+
+            //     // Account lockout policy
+            //     options.Lockout.MaxFailedAccessAttempts = 5;
+            //     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+
+            //     // User rules
+            //     options.User.RequireUniqueEmail = true;
+            // })
+            // .AddEntityFrameworkStores<ApplicationDbContext>()
+            // .AddDefaultTokenProviders();
+            services.AddIdentityCore<ApplicationUser>(options =>
             {
-                // Password policy
+                // Password policy (can tighten later)
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
 
-                // Account lockout policy
+                // Lockout policy
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
 
-                // User rules
+                // User settings
                 options.User.RequireUniqueEmail = true;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+            .AddRoles<IdentityRole<Guid>>()               // Enable Role support
+            .AddEntityFrameworkStores<ApplicationDbContext>(); // Persist Identity to SQL
+             
 
             return services;
         }

@@ -1,8 +1,16 @@
+using MPHMS.Infrastructure.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+//Niranjan --
+// ------------------------------------
+// Register Infrastructure Layer
+// ------------------------------------
+builder.Services.AddInfrastructure(builder.Configuration);
 
+//-- Niranjan
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
