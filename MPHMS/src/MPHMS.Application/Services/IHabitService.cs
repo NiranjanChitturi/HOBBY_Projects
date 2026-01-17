@@ -54,5 +54,7 @@ namespace MPHMS.Application.Services
         /// Returns all habits for a user.
         /// </summary>
         Task<List<HabitResponse>> GetUserHabitsAsync(Guid userId);
+        Task<List<HabitResponse>> GetMyHabitsAsync();
+
     }
 }

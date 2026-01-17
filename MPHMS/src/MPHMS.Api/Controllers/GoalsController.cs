@@ -20,7 +20,13 @@ namespace MPHMS.Api.Controllers
     /// ✔ Add milestone
     /// ✔ Update milestone progress
     /// ✔ Fetch user goals
-    ///
+    //////
+    /// SECURITY:
+    /// ---------
+    /// ✔ JWT Authentication required
+    /// ✔ User identity resolved from token
+    /// ✔ No UserId accepted from request
+    /// 
     /// Architecture:
     /// -------------
     /// API Layer → Application Layer → Domain → Infrastructure
@@ -45,7 +51,7 @@ namespace MPHMS.Api.Controllers
         // -------------------------------------------------------
 
         /// <summary>
-        /// Creates a new goal.
+        /// Creates a new goal for authenticated user.
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateGoal([FromBody] CreateGoalRequest request)
@@ -119,14 +125,28 @@ namespace MPHMS.Api.Controllers
         // -------------------------------------------------------
 
         /// <summary>
-        /// Returns all goals for a user.
+        /// Returns goals for currently authenticated user.
         /// </summary>
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserGoals(Guid userId)
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMyGoals()
         {
-            var result = await _goalService.GetUserGoalsAsync(userId);
+            var result = await _goalService.GetMyGoalsAsync();
 
             return ApiOk(result);
         }
+        //// -------------------------------------------------------
+        //// QUERY
+        //// -------------------------------------------------------
+
+        ///// <summary>
+        ///// Returns all goals for a user.
+        ///// </summary>
+        //[HttpGet("user/{userId}")]
+        //public async Task<IActionResult> GetUserGoals(Guid userId)
+        //{
+        //    var result = await _goalService.GetUserGoalsAsync(userId);
+
+        //    return ApiOk(result);
+        //}
     }
 }

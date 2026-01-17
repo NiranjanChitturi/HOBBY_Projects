@@ -168,5 +168,31 @@ ICurrentUserService currentUser)
 
             return response;
         }
+
+        public async Task<List<GoalResponse>> GetMyGoalsAsync()
+        {
+            var userId = _currentUser.UserId
+                ?? throw new Exception("User not authenticated");
+
+            var goals = await _goalReadRepository
+                .FindAsync(x => x.UserId == userId);
+
+            var response = new List<GoalResponse>();
+
+            foreach (var goal in goals)
+            {
+                response.Add(new GoalResponse
+                {
+                    GoalId = goal.Id,
+                    Name = goal.Name,
+                    Description = goal.Description,
+                    Status = goal.Status,
+                    TargetDate = goal.TargetDate
+                });
+            }
+
+            return response;
+        }
+
     }
 }

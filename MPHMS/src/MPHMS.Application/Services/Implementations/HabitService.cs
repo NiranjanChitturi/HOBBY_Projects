@@ -196,5 +196,30 @@ ICurrentUserService currentUser)
 
             return response;
         }
+        public async Task<List<HabitResponse>> GetMyHabitsAsync()
+        {
+            var userId = _currentUser.UserId
+                ?? throw new Exception("User not authenticated");
+
+            var habits = await _habitReadRepository
+                .FindAsync(x => x.UserId == userId);
+
+            var response = new List<HabitResponse>();
+
+            foreach (var habit in habits)
+            {
+                response.Add(new HabitResponse
+                {
+                    HabitId = habit.Id,
+                    Name = habit.Name,
+                    Difficulty = habit.Difficulty,
+                    Status = habit.Status,
+                    CategoryId = habit.CategoryId
+                });
+            }
+
+            return response;
+        }
+
     }
 }

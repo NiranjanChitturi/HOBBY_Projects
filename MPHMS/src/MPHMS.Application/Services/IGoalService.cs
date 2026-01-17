@@ -30,6 +30,8 @@ namespace MPHMS.Application.Services
         // ------------------------
         // Milestone Management
         // ------------------------
+        Task<List<GoalResponse>> GetMyGoalsAsync();
+
 
         Task AddMilestoneAsync(AddMilestoneRequest request);
 

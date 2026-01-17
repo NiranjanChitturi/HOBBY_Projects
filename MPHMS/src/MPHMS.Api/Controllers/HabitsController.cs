@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace MPHMS.Api.Controllers
 {
     /// <summary>
-    /// HabitsController exposes REST endpoints
+    /// HabitsController exposes secured  REST endpoints
     /// for Habit management.
     ///
     /// Responsibilities:
@@ -20,6 +20,12 @@ namespace MPHMS.Api.Controllers
     /// ✔ Log daily habit
     /// ✔ Add skip reason
     /// ✔ Fetch user habits
+    ///
+    /// SECURITY:
+    /// ---------
+    /// ✔ Requires JWT Authentication
+    /// ✔ User identity extracted from token
+    /// ✔ No UserId accepted from client
     ///
     /// Architecture:
     /// -------------
@@ -122,15 +128,26 @@ namespace MPHMS.Api.Controllers
         // QUERY
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Returns all habits for a user.
-        /// </summary>
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserHabits(Guid userId)
+        ///// <summary>
+        ///// Returns all habits for a user.
+        ////// Returns habits for currently authenticated user.
+        /// No userId parameter allowed.
+        ///// </summary>
+        ///
+       
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMyHabits()
         {
-            var result = await _habitService.GetUserHabitsAsync(userId);
+            var result = await _habitService.GetMyHabitsAsync();
 
             return ApiOk(result);
         }
+        //[HttpGet("user/{userId}")]
+        //public async Task<IActionResult> GetUserHabits(Guid userId)
+        //{
+        //    var result = await _habitService.GetUserHabitsAsync(userId);
+        //    return ApiOk(result);
+        //}
+
     }
 }
