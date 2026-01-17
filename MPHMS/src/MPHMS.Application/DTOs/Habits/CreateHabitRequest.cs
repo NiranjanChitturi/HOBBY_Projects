@@ -3,20 +3,32 @@ using System;
 namespace MPHMS.Application.DTOs.Habits
 {
     /// <summary>
-    /// DTO used when creating a new habit.
+    /// DTO used to create a new habit.
     ///
-    /// Acts as API → Application boundary contract.
+    /// Represents user input from API/UI layer.
     /// </summary>
     public class CreateHabitRequest
     {
+        /// <summary>
+        /// Owner of the habit
+        /// </summary>
         public Guid UserId { get; set; }
 
+        /// <summary>
+        /// Habit display name
+        /// Example: "Morning Workout"
+        /// </summary>
         public string Name { get; set; } = null!;
 
-        public string? Description { get; set; }
+        /// <summary>
+        /// Difficulty lookup value
+        /// Example: 1 = Easy, 2 = Medium, 3 = Hard
+        /// </summary>
+        public int Difficulty { get; set; }
 
-        public int CategoryId { get; set; }
-
-        public bool IsDaily { get; set; }
+        /// <summary>
+        /// Optional category reference
+        /// </summary>
+        public Guid? CategoryId { get; set; }
     }
 }
