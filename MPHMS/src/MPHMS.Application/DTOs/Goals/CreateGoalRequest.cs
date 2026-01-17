@@ -3,7 +3,12 @@ using System;
 namespace MPHMS.Application.DTOs.Goals
 {
     /// <summary>
-    /// DTO used when creating a new Goal.
+    /// DTO used for creating a new goal.
+    ///
+    /// IMPORTANT:
+    /// ----------
+    /// UserId is derived from JWT token.
+    /// Client MUST NOT supply UserId.
     /// </summary>
     public class CreateGoalRequest
     {

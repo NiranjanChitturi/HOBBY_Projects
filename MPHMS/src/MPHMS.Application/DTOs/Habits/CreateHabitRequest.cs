@@ -9,6 +9,14 @@ namespace MPHMS.Application.DTOs.Habits
     /// </summary>
     public class CreateHabitRequest
     {
+        /// <summary>
+        /// DTO used for creating a new habit.
+        ///
+        /// IMPORTANT:
+        /// ----------
+        /// UserId is NOT accepted from client.
+        /// It will be resolved from JWT via CurrentUserService.
+        /// </summary>
         ///// <summary>
         ///// Owner of the habit
         ///// </summary>

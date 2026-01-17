@@ -26,6 +26,11 @@ namespace MPHMS.Application.Services.Implementations
     /// - No EF Core usage
     /// - No HTTP logic
     /// - Uses repository abstractions ONLY
+    ///   
+    ///  SECURITY:
+    /// ---------
+    /// UserId is obtained ONLY from CurrentUserService (JWT).
+    /// Client never supplies UserId.
     /// </summary>
     public class HabitService : IHabitService
     {
@@ -42,7 +47,7 @@ namespace MPHMS.Application.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
 
         //Current User Service
-        private readonly ICurrentUserService _currentUserService;
+        private readonly ICurrentUserService _currentUser;
 
         /// <summary>
         /// Constructor Injection
@@ -54,7 +59,7 @@ namespace MPHMS.Application.Services.Implementations
             IReadRepository<HabitLog> habitLogReadRepository,
             IGenericRepository<HabitSkipLog> habitSkipRepository,
             IUnitOfWork unitOfWork,
-ICurrentUserService currentUserService)
+ICurrentUserService currentUser)
         {
             _habitRepository = habitRepository;
             _habitReadRepository = habitReadRepository;
@@ -64,7 +69,7 @@ ICurrentUserService currentUserService)
 
             _habitSkipRepository = habitSkipRepository;
             _unitOfWork = unitOfWork;
-            _currentUserService = currentUserService;
+            _currentUser = currentUser;
         }
 
         // -------------------------------------------------------
@@ -73,14 +78,15 @@ ICurrentUserService currentUserService)
 
         public async Task<Guid> CreateHabitAsync(CreateHabitRequest request)
         {
+            if (_currentUser.UserId == null)
+                throw new UnauthorizedAccessException("User not authenticated");
+
             var habit = new Habit
             {
                 Name = request.Name,
                 Difficulty = request.Difficulty,
                 CategoryId = request.CategoryId,
-                UserId = _currentUserService.UserId
-         ?? throw new UnauthorizedAccessException("User not authenticated"),
-
+                UserId = _currentUser.UserId.Value,
                 // ACTIVE by default
                 Status = 1
             };

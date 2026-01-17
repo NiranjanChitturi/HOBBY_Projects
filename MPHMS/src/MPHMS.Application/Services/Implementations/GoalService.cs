@@ -26,7 +26,7 @@ namespace MPHMS.Application.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
 
         //Current user service
-        private readonly ICurrentUserService _currentUserService;
+        private readonly ICurrentUserService _currentUser;
 
         public GoalService(
             IGenericRepository<Goal> goalRepository,
@@ -34,7 +34,7 @@ namespace MPHMS.Application.Services.Implementations
             IGenericRepository<Milestone> milestoneRepository,
             IReadRepository<Milestone> milestoneReadRepository,
             IUnitOfWork unitOfWork,
-ICurrentUserService currentUserService)
+ICurrentUserService currentUser)
 
         {
             _goalRepository = goalRepository;
@@ -44,7 +44,7 @@ ICurrentUserService currentUserService)
             _milestoneReadRepository = milestoneReadRepository;
 
             _unitOfWork = unitOfWork;
-            _currentUserService = currentUserService;
+            _currentUser = currentUser;
         }
 
         // -------------------------------------------------------
@@ -53,12 +53,16 @@ ICurrentUserService currentUserService)
 
         public async Task<Guid> CreateGoalAsync(CreateGoalRequest request)
         {
+
+            if (_currentUser.UserId == null)
+                throw new UnauthorizedAccessException("User not authenticated");
+
             var goal = new Goal
             {
                 Name = request.Name,
                 Description = request.Description,
 
-                UserId = _currentUserService.UserId ?? throw new UnauthorizedAccessException("User not authenticated"),
+                UserId = _currentUser.UserId ?? throw new UnauthorizedAccessException("User not authenticated"),
                 CategoryId = request.CategoryId,
 
                 StartDate = request.StartDate,
