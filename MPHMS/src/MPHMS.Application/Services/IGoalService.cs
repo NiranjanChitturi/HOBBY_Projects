@@ -6,36 +6,33 @@ using System.Threading.Tasks;
 namespace MPHMS.Application.Services
 {
     /// <summary>
-    /// IGoalService defines goal management operations.
+    /// Contract for Goal business operations.
     ///
-    /// Responsibilities:
-    /// -----------------
-    /// ✔ Create goals
-    /// ✔ Update goals
-    /// ✔ Track milestones
-    /// ✔ Close goals
-    /// ✔ Fetch user goals
+    /// This interface defines ALL application-level
+    /// goal-related use cases.
+    ///
+    /// API Layer depends ONLY on this abstraction.
     /// </summary>
     public interface IGoalService
     {
-        /// <summary>
-        /// Creates a new goal.
-        /// </summary>
+        // ------------------------
+        // Goal Management
+        // ------------------------
+
         Task<Guid> CreateGoalAsync(CreateGoalRequest request);
 
-        /// <summary>
-        /// Updates goal details.
-        /// </summary>
         Task UpdateGoalAsync(Guid goalId, UpdateGoalRequest request);
 
-        /// <summary>
-        /// Soft deletes a goal.
-        /// </summary>
         Task DeleteGoalAsync(Guid goalId);
 
-        /// <summary>
-        /// Returns all goals for a user.
-        /// </summary>
         Task<List<GoalResponse>> GetUserGoalsAsync(Guid userId);
+
+        // ------------------------
+        // Milestone Management
+        // ------------------------
+
+        Task AddMilestoneAsync(AddMilestoneRequest request);
+
+        Task UpdateMilestoneProgressAsync(UpdateMilestoneProgressRequest request);
     }
 }
