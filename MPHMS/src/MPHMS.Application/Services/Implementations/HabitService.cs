@@ -21,41 +21,34 @@ namespace MPHMS.Application.Services.Implementations
     ///
     /// IMPORTANT:
     /// ----------
-    /// This layer:
-    /// - Contains ZERO EF Core code
-    /// - Contains ZERO HTTP logic
+    /// - No EF Core usage
+    /// - No HTTP logic
     /// - Uses repository abstractions ONLY
-    ///
-    /// This enforces Clean Architecture separation.
     /// </summary>
     public class HabitService : IHabitService
     {
-        // ----------------------------
-        // Repository Dependencies
-        // ----------------------------
-
-        // Write repositories
+        // WRITE repositories
         private readonly IGenericRepository<Habit> _habitRepository;
         private readonly IGenericRepository<HabitLog> _habitLogRepository;
         private readonly IGenericRepository<HabitSkipLog> _habitSkipRepository;
 
-        // Read repositories
+        // READ repositories
         private readonly IReadRepository<Habit> _habitReadRepository;
         private readonly IReadRepository<HabitLog> _habitLogReadRepository;
 
-        // Transaction manager
+        // Unit of Work
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Constructor Injection
         /// </summary>
         public HabitService(
-           IGenericRepository<Habit> habitRepository,
-           IReadRepository<Habit> habitReadRepository,
-           IGenericRepository<HabitLog> habitLogRepository,
-           IReadRepository<HabitLog> habitLogReadRepository,
-           IGenericRepository<HabitSkipLog> habitSkipRepository,
-           IUnitOfWork unitOfWork)
+            IGenericRepository<Habit> habitRepository,
+            IReadRepository<Habit> habitReadRepository,
+            IGenericRepository<HabitLog> habitLogRepository,
+            IReadRepository<HabitLog> habitLogReadRepository,
+            IGenericRepository<HabitSkipLog> habitSkipRepository,
+            IUnitOfWork unitOfWork)
         {
             _habitRepository = habitRepository;
             _habitReadRepository = habitReadRepository;
@@ -64,31 +57,24 @@ namespace MPHMS.Application.Services.Implementations
             _habitLogReadRepository = habitLogReadRepository;
 
             _habitSkipRepository = habitSkipRepository;
-
             _unitOfWork = unitOfWork;
         }
 
         // -------------------------------------------------------
-        // HABIT CREATION
+        // CREATE HABIT
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Creates a new habit.
-        /// </summary>
         public async Task<Guid> CreateHabitAsync(CreateHabitRequest request)
         {
             var habit = new Habit
             {
                 Name = request.Name,
-
-                // Difficulty lookup value
                 Difficulty = request.Difficulty,
-
-                // Default ACTIVE status (lookup value)
-                Status = 1,
-
                 CategoryId = request.CategoryId,
-                UserId = request.UserId
+                UserId = request.UserId,
+
+                // ACTIVE by default
+                Status = 1
             };
 
             await _habitRepository.AddAsync(habit);
@@ -98,12 +84,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // HABIT UPDATE
+        // UPDATE HABIT
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Updates existing habit details.
-        /// </summary>
         public async Task UpdateHabitAsync(Guid habitId, UpdateHabitRequest request)
         {
             var habit = await _habitReadRepository.GetByIdAsync(habitId);
@@ -115,7 +98,7 @@ namespace MPHMS.Application.Services.Implementations
             habit.Difficulty = request.Difficulty;
             habit.CategoryId = request.CategoryId;
 
-            // Optional status update
+            // Status replaces IsActive
             habit.Status = request.Status;
 
             _habitRepository.Update(habit);
@@ -123,12 +106,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // HABIT DELETE (SOFT DELETE)
+        // DELETE HABIT (SOFT DELETE)
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Soft deletes a habit.
-        /// </summary>
         public async Task DeleteHabitAsync(Guid habitId)
         {
             var habit = await _habitReadRepository.GetByIdAsync(habitId);
@@ -141,25 +121,20 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // DAILY HABIT LOGGING
+        // DAILY LOGGING
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Logs a habit completion entry.
-        /// </summary>
         public async Task LogHabitAsync(LogHabitRequest request)
         {
             var log = new HabitLog
             {
                 HabitId = request.HabitId,
 
-                // Domain uses DateOnly
+                // Correct DateOnly conversion
                 LogDate = DateOnly.FromDateTime(DateTime.UtcNow),
 
-                // Status lookup:
-                // 1 = Completed
-                // 2 = Skipped
-                Status = request.IsCompleted ? 1 : 2
+                // Status replaces IsCompleted
+                Status = request.IsCompleted ? 1 : 0
             };
 
             await _habitLogRepository.AddAsync(log);
@@ -167,12 +142,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // SKIP REASON LOGGING
+        // SKIP REASON
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Adds skip reason for a habit log.
-        /// </summary>
         public async Task AddSkipReasonAsync(AddSkipReasonRequest request)
         {
             var skip = new HabitSkipLog
@@ -187,16 +159,12 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // QUERY OPERATIONS
+        // QUERY
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Returns all active habits for a user.
-        /// </summary>
         public async Task<List<HabitResponse>> GetUserHabitsAsync(Guid userId)
         {
-            var habits = await _habitReadRepository
-                .FindAsync(x => x.UserId == userId);
+            var habits = await _habitReadRepository.FindAsync(h => h.UserId == userId);
 
             var response = new List<HabitResponse>();
 

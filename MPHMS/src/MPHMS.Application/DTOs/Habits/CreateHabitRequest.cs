@@ -9,9 +9,9 @@ namespace MPHMS.Application.DTOs.Habits
     /// </summary>
     public class CreateHabitRequest
     {
-        /// <summary>
-        /// Owner of the habit
-        /// </summary>
+        ///// <summary>
+        ///// Owner of the habit
+        ///// </summary>
         public Guid UserId { get; set; }
 
         /// <summary>

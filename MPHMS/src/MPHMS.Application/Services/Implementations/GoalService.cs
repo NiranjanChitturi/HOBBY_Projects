@@ -10,40 +10,20 @@ namespace MPHMS.Application.Services.Implementations
 {
     /// <summary>
     /// GoalService contains ALL business logic related to Goals.
-    ///
-    /// Responsibilities:
-    /// -----------------
-    /// ✔ Create goals
-    /// ✔ Update goals
-    /// ✔ Soft delete goals
-    /// ✔ Manage milestones
-    /// ✔ Fetch user goals
-    ///
-    /// IMPORTANT:
-    /// ----------
-    /// - No EF Core usage
-    /// - No HTTP logic
-    /// - No infrastructure dependency
-    ///
-    /// Uses repository abstractions ONLY.
     /// </summary>
     public class GoalService : IGoalService
     {
-        // ----------------------------
-        // Repository Dependencies
-        // ----------------------------
-
+        // WRITE repositories
         private readonly IGenericRepository<Goal> _goalRepository;
-        private readonly IReadRepository<Goal> _goalReadRepository;
-
         private readonly IGenericRepository<Milestone> _milestoneRepository;
+
+        // READ repositories
+        private readonly IReadRepository<Goal> _goalReadRepository;
         private readonly IReadRepository<Milestone> _milestoneReadRepository;
 
+        // Unit of Work
         private readonly IUnitOfWork _unitOfWork;
 
-        /// <summary>
-        /// Constructor Injection
-        /// </summary>
         public GoalService(
             IGenericRepository<Goal> goalRepository,
             IReadRepository<Goal> goalReadRepository,
@@ -61,12 +41,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // GOAL CREATION
+        // CREATE GOAL
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Creates a new goal.
-        /// </summary>
         public async Task<Guid> CreateGoalAsync(CreateGoalRequest request)
         {
             var goal = new Goal
@@ -80,7 +57,7 @@ namespace MPHMS.Application.Services.Implementations
                 StartDate = request.StartDate,
                 TargetDate = request.TargetDate,
 
-                Status = 1 // Default ACTIVE
+                Status = 1
             };
 
             await _goalRepository.AddAsync(goal);
@@ -90,12 +67,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // GOAL UPDATE
+        // UPDATE GOAL
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Updates existing goal details.
-        /// </summary>
         public async Task UpdateGoalAsync(Guid goalId, UpdateGoalRequest request)
         {
             var goal = await _goalReadRepository.GetByIdAsync(goalId);
@@ -114,12 +88,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // GOAL DELETE (SOFT DELETE)
+        // DELETE GOAL
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Soft deletes a goal.
-        /// </summary>
         public async Task DeleteGoalAsync(Guid goalId)
         {
             var goal = await _goalReadRepository.GetByIdAsync(goalId);
@@ -132,12 +103,9 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // MILESTONE MANAGEMENT
+        // MILESTONE
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Adds milestone to a goal.
-        /// </summary>
         public async Task AddMilestoneAsync(AddMilestoneRequest request)
         {
             var milestone = new Milestone
@@ -152,9 +120,6 @@ namespace MPHMS.Application.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Updates milestone progress.
-        /// </summary>
         public async Task UpdateMilestoneProgressAsync(UpdateMilestoneProgressRequest request)
         {
             var milestone = await _milestoneReadRepository.GetByIdAsync(request.MilestoneId);
@@ -169,16 +134,12 @@ namespace MPHMS.Application.Services.Implementations
         }
 
         // -------------------------------------------------------
-        // QUERY OPERATIONS
+        // QUERY
         // -------------------------------------------------------
 
-        /// <summary>
-        /// Returns all goals for a user.
-        /// </summary>
         public async Task<List<GoalResponse>> GetUserGoalsAsync(Guid userId)
         {
-            var goals = await _goalReadRepository
-                .FindAsync(g => g.UserId == userId);
+            var goals = await _goalReadRepository.FindAsync(g => g.UserId == userId);
 
             var response = new List<GoalResponse>();
 

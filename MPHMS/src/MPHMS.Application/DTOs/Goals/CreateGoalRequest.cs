@@ -8,6 +8,11 @@ namespace MPHMS.Application.DTOs.Goals
     public class CreateGoalRequest
     {
         /// <summary>
+        /// Owner of the goal
+        /// </summary>
+        public Guid UserId { get; set; }
+
+        /// <summary>
         /// Goal title
         /// Example: "Lose 5 Kg"
         /// </summary>
@@ -18,10 +23,10 @@ namespace MPHMS.Application.DTOs.Goals
         /// </summary>
         public string? Description { get; set; }
 
-        /// <summary>
-        /// Owner of the goal
-        /// </summary>
-        public Guid UserId { get; set; }
+        ///// <summary>
+        ///// Owner of the goal
+        ///// </summary>
+        //public Guid UserId { get; set; }
 
         /// <summary>
         /// Optional category reference

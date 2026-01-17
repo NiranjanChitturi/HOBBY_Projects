@@ -1,4 +1,6 @@
-using MPHMS.Infrastructure.DependencyInjection;
+using MPHMS.Application.Common.Interfaces;
+using MPHMS.Infrastructure.DependencyInjection; 
+using MPHMS.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddOpenApi();
 // Register Infrastructure Layer
 // ------------------------------------
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 //-- Niranjan
 var app = builder.Build();
