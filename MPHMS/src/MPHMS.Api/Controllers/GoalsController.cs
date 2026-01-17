@@ -4,6 +4,7 @@ using MPHMS.Application.DTOs.Goals;
 using MPHMS.Application.Services;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MPHMS.Api.Controllers
 {
@@ -24,6 +25,9 @@ namespace MPHMS.Api.Controllers
     /// -------------
     /// API Layer → Application Layer → Domain → Infrastructure
     /// </summary>
+
+    // 🔐 Phase 15 — Secure all goal APIs
+    [Authorize]
     public class GoalsController : BaseApiController
     {
         private readonly IGoalService _goalService;

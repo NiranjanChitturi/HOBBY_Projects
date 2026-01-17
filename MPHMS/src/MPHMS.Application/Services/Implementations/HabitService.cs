@@ -5,6 +5,8 @@ using MPHMS.Domain.Entities.Habits;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MPHMS.Application.Common.Interfaces;
+
 
 namespace MPHMS.Application.Services.Implementations
 {
@@ -39,6 +41,9 @@ namespace MPHMS.Application.Services.Implementations
         // Unit of Work
         private readonly IUnitOfWork _unitOfWork;
 
+        //Current User Service
+        private readonly ICurrentUserService _currentUserService;
+
         /// <summary>
         /// Constructor Injection
         /// </summary>
@@ -48,7 +53,8 @@ namespace MPHMS.Application.Services.Implementations
             IGenericRepository<HabitLog> habitLogRepository,
             IReadRepository<HabitLog> habitLogReadRepository,
             IGenericRepository<HabitSkipLog> habitSkipRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+ICurrentUserService currentUserService)
         {
             _habitRepository = habitRepository;
             _habitReadRepository = habitReadRepository;
@@ -58,6 +64,7 @@ namespace MPHMS.Application.Services.Implementations
 
             _habitSkipRepository = habitSkipRepository;
             _unitOfWork = unitOfWork;
+            _currentUserService = currentUserService;
         }
 
         // -------------------------------------------------------
@@ -71,7 +78,8 @@ namespace MPHMS.Application.Services.Implementations
                 Name = request.Name,
                 Difficulty = request.Difficulty,
                 CategoryId = request.CategoryId,
-                UserId = request.UserId,
+                UserId = _currentUserService.UserId
+         ?? throw new UnauthorizedAccessException("User not authenticated"),
 
                 // ACTIVE by default
                 Status = 1

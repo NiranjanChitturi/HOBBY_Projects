@@ -5,6 +5,7 @@ using MPHMS.Domain.Entities.Goals;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MPHMS.Application.Common.Interfaces;
 
 namespace MPHMS.Application.Services.Implementations
 {
@@ -24,12 +25,17 @@ namespace MPHMS.Application.Services.Implementations
         // Unit of Work
         private readonly IUnitOfWork _unitOfWork;
 
+        //Current user service
+        private readonly ICurrentUserService _currentUserService;
+
         public GoalService(
             IGenericRepository<Goal> goalRepository,
             IReadRepository<Goal> goalReadRepository,
             IGenericRepository<Milestone> milestoneRepository,
             IReadRepository<Milestone> milestoneReadRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+ICurrentUserService currentUserService)
+
         {
             _goalRepository = goalRepository;
             _goalReadRepository = goalReadRepository;
@@ -38,6 +44,7 @@ namespace MPHMS.Application.Services.Implementations
             _milestoneReadRepository = milestoneReadRepository;
 
             _unitOfWork = unitOfWork;
+            _currentUserService = currentUserService;
         }
 
         // -------------------------------------------------------
@@ -51,7 +58,7 @@ namespace MPHMS.Application.Services.Implementations
                 Name = request.Name,
                 Description = request.Description,
 
-                UserId = request.UserId,
+                UserId = _currentUserService.UserId ?? throw new UnauthorizedAccessException("User not authenticated"),
                 CategoryId = request.CategoryId,
 
                 StartDate = request.StartDate,

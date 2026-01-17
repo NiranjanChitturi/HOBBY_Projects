@@ -7,10 +7,10 @@ namespace MPHMS.Application.DTOs.Goals
     /// </summary>
     public class CreateGoalRequest
     {
-        /// <summary>
-        /// Owner of the goal
-        /// </summary>
-        public Guid UserId { get; set; }
+       // /// <summary>
+       // /// Owner of the goal
+       // /// </summary>
+       //// public Guid UserId { get; set; }
 
         /// <summary>
         /// Goal title

@@ -12,7 +12,7 @@ namespace MPHMS.Application.DTOs.Habits
         ///// <summary>
         ///// Owner of the habit
         ///// </summary>
-        public Guid UserId { get; set; }
+        ////public Guid UserId { get; set; }
 
         /// <summary>
         /// Habit display name
