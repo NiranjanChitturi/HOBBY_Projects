@@ -5,113 +5,64 @@ using System.Collections.Generic;
 namespace MPHMS.Domain.Entities.Goals
 {
     /// <summary>
-    /// Goal represents a long-term objective defined by a user.
+    /// Goal represents a long-term objective tracked by the user.
     ///
     /// Examples:
-    /// ----------
-    /// - Save ₹5 Lakhs by Dec
+    /// ---------
+    /// - Lose 10kg
+    /// - Save ₹1,00,000
     /// - Complete AWS Certification
-    /// - Lose 10kg in 6 months
     ///
-    /// Architectural Role:
-    /// -------------------
-    /// Aggregate Root
-    ///
-    /// Owns:
-    /// -----
-    /// - Milestones
-    ///
-    /// All changes to Milestones MUST go through Goal.
-    ///
-    /// Database Mapping:
-    /// -----------------
-    /// dbo.Goals
+    /// This is a CORE aggregate root for goal tracking.
     /// </summary>
     public class Goal : BaseAuditableEntity
     {
-        // /// <summary>
-        // /// Primary Key
-        // /// Maps to: Goals.GoalId
-        // /// </summary>
-        // public Guid GoalId { get; set; }
-
         /// <summary>
-        /// Foreign key reference to UserProfile
+        /// Owner of the goal
         /// </summary>
         public Guid UserId { get; set; }
 
         /// <summary>
-        /// Optional category grouping
+        /// Goal title
+        /// Example: "Lose 10kg"
         /// </summary>
-        public Guid? CategoryId { get; set; }
+        public string Name { get; set; } = null!;
 
         /// <summary>
-        /// Goal title displayed to user
-        /// </summary>
-        public string Title { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Detailed description of the goal
+        /// Optional goal description
         /// </summary>
         public string? Description { get; set; }
 
         /// <summary>
-        /// Priority scale:
-        /// 1 = Low
-        /// 5 = Critical
+        /// Optional category (Fitness, Finance, Career)
         /// </summary>
-        public int Priority { get; set; }
+        public Guid? CategoryId { get; set; }
 
         /// <summary>
-        /// Optional deadline for completion
+        /// When the goal tracking starts
         /// </summary>
-        public DateTime? Deadline { get; set; }
+        public DateOnly StartDate { get; set; }
 
         /// <summary>
-        /// Status reference:
+        /// Target completion date
+        /// </summary>
+        public DateOnly TargetDate { get; set; }
+
+        /// <summary>
+        /// Status lookup reference
+        /// Example:
         /// 1 = Active
         /// 2 = Completed
-        /// 3 = Archived
+        /// 3 = Cancelled
         /// </summary>
         public int Status { get; set; }
 
-        /// <summary>
-        /// Navigation collection of milestones
-        /// </summary>
+        // -----------------------
+        // Navigation Properties
+        // -----------------------
 
         public GoalCategory? Category { get; set; }
-        
-        public ICollection<Milestone> Milestones { get; set; }
-            = new List<Milestone>();
 
-        // -------------------------------
-        // Domain Behavior (Business Rules)
-        // -------------------------------
-
-        /// <summary>
-        /// Marks goal as completed.
-        ///
-        /// Business Rule:
-        /// --------------
-        /// - All milestones must be completed
-        /// </summary>
-        public void MarkCompleted()
-        {
-            if (Milestones.Any(m => !m.IsCompleted))
-                throw new InvalidOperationException(
-                    "Cannot complete goal until all milestones are completed.");
-
-            Status = 2; // Completed
-        }
-
-        /// <summary>
-        /// Archives goal (soft business state).
-        ///
-        /// Used when user no longer wants to track it.
-        /// </summary>
-        public void Archive()
-        {
-            Status = 3; // Archived
-        }
+        public ICollection<Milestone> Milestones { get; set; } = new List<Milestone>();
     }
 }

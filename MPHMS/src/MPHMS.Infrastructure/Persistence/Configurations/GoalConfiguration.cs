@@ -5,7 +5,7 @@ using MPHMS.Domain.Entities.Goals;
 namespace MPHMS.Infrastructure.Persistence.Configurations
 {
     /// <summary>
-    /// Maps Goal entity.
+    /// Entity configuration for Goal table mapping.
     /// </summary>
     public class GoalConfiguration : IEntityTypeConfiguration<Goal>
     {
@@ -15,30 +15,30 @@ namespace MPHMS.Infrastructure.Persistence.Configurations
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Title)
-                   .IsRequired()
-                   .HasMaxLength(200);
+            builder.Property(x => x.Name)
+                   .HasMaxLength(200)
+                   .IsRequired();
 
             builder.Property(x => x.Description)
-                   .HasMaxLength(1000);
+                   .HasMaxLength(2000);
 
-            builder.Property(x => x.Priority).IsRequired();
-            builder.Property(x => x.Status).IsRequired();
+            builder.Property(x => x.Status)
+                   .IsRequired();
+
+            builder.Property(x => x.StartDate)
+                   .IsRequired();
+
+            builder.Property(x => x.TargetDate)
+                   .IsRequired();
 
             // Relationships
-       //      builder.HasOne(x => x.User)
-       //             .WithMany()
-       //             .HasForeignKey(x => x.UserId)
-       //             .OnDelete(DeleteBehavior.Restrict);
-builder.Property(x => x.UserId)
-       .IsRequired();
 
             builder.HasOne(x => x.Category)
                    .WithMany()
                    .HasForeignKey(x => x.CategoryId)
-                   .OnDelete(DeleteBehavior.SetNull);
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            // Audit
+            // Audit fields
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.IsDeleted).HasDefaultValue(false);
         }

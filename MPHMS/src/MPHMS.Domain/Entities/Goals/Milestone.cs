@@ -4,94 +4,36 @@ using System;
 namespace MPHMS.Domain.Entities.Goals
 {
     /// <summary>
-    /// Milestone represents a measurable checkpoint
-    /// inside a Goal.
+    /// Milestone represents progress checkpoints inside a goal.
     ///
-    /// Examples:
-    /// ----------
-    /// Goal: "Complete AWS Certification"
-    /// Milestones:
-    /// - Finish Cloud Practitioner course
-    /// - Complete Practice Exams
-    /// - Book Exam Slot
-    ///
-    /// Architectural Role:
-    /// -------------------
-    /// Child Entity (Owned by Goal)
-    ///
-    /// Important:
-    /// ----------
-    /// Milestone lifecycle is controlled ONLY via Goal.
-    ///
-    /// Database Mapping:
-    /// -----------------
-    /// dbo.GoalMilestones (will be created via EF)
+    /// Example:
+    /// --------
+    /// Goal: Lose 10kg
+    /// Milestone: Lose first 3kg
     /// </summary>
     public class Milestone : BaseAuditableEntity
     {
-        // /// <summary>
-        // /// Primary Key
-        // /// </summary>
-        // public Guid MilestoneId { get; set; }
-
         /// <summary>
-        /// Foreign key reference to parent Goal
+        /// Parent goal reference
         /// </summary>
         public Guid GoalId { get; set; }
 
         /// <summary>
-        /// Short title of milestone
+        /// Milestone title
         /// </summary>
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; } = null!;
 
         /// <summary>
-        /// Optional milestone description
+        /// Target value required to complete milestone
         /// </summary>
-        public string? Description { get; set; }
+        public decimal TargetValue { get; set; }
 
         /// <summary>
-        /// Completion flag
+        /// Current achieved value
         /// </summary>
-        public bool IsCompleted { get; private set; }
+        public decimal CurrentValue { get; set; }
 
-        /// <summary>
-        /// When milestone was completed
-        /// </summary>
-        public DateTime? CompletedAt { get; private set; }
-        
         // Navigation
         public Goal Goal { get; set; } = null!;
-
-
-        // -------------------------------
-        // Domain Behavior
-        // -------------------------------
-
-        /// <summary>
-        /// Marks milestone as completed.
-        ///
-        /// Business Rules:
-        /// ----------------
-        /// - Cannot complete twice
-        /// </summary>
-        public void MarkCompleted()
-        {
-            if (IsCompleted)
-                throw new InvalidOperationException("Milestone is already completed.");
-
-            IsCompleted = true;
-            CompletedAt = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Reopens a completed milestone.
-        ///
-        /// Used when user reverts progress.
-        /// </summary>
-        public void Reopen()
-        {
-            IsCompleted = false;
-            CompletedAt = null;
-        }
     }
 }
