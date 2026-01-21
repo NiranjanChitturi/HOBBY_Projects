@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Habit Board - HabitMatrix";
+
+    // Habits list passed from controller
+    var habits = ViewBag.Habits as List<HabitMatrix.Models.Habit>;
+
+    // Dictionary: HabitId -> List of HabitLogs
+    var logsDict = ViewBag.LogsDict as Dictionary<Guid, List<HabitMatrix.Models.HabitLog>>;
+
+    // Current date and month info
+    var today = DateOnly.FromDateTime(DateTime.UtcNow);
+    var daysInMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month);
+}
+
+<!-- ================================
+     Habit Board (glossy container)
+     ================================ -->
+<div class="container glass-card p-6 mx-auto mt-10">
+    @Html.AntiForgeryToken() <!-- Single token for AJAX calls -->
+    <!-- Header -->
+    <h2 class="text-2xl font-bold mb-2">Habit Board</h2>
+    <p class="mb-6 text-gray-600">Track your daily progress</p>
+
+    <!-- Add Habit (pastel primary button) -->
+    <button id="addHabitBtn" class="btn-primary mb-4">
+        + Add Habit
+    </button>
+
+    <!-- ================================
+         Habit Grid (glossy table)
+         ================================ -->
+    <table id="habitTable" class="table-glossy">
+        <thead>
+            <tr>
+                <th>Habit</th>
+                @for (int day = 1; day <= daysInMonth; day++)
+                {
+                    <th>@day</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var habit in habits)
+            {
+                <tr>
+                    <!-- Habit name; color comes from DB -->
+                    <td class="font-semibold" style="color:@habit.Color">
+                        @habit.Name
+                    </td>
+
+                    <!-- Daily log cells -->
+                    @for (int day = 1; day <= daysInMonth; day++)
+                    {
+                        var date = new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, day);
+                        // Safe null check before accessing logsDict
+                        var log = logsDict?.GetValueOrDefault(habit.Id)?.FirstOrDefault(l => l.LogDate == date);
+
+                        <td class="text-center">
+                            <!-- Compact Checkbox (pastel theme) -->
+                            <input type="checkbox"
+                                   class="habit-checkbox @(log?.Status == true ? "" : "missed")"
+                                   data-habit="@habit.Id"
+                                   data-date="@date.ToString("yyyy-MM-dd")"
+                                   @(log?.Status == true ? "checked" : "") />
+
+                            @* Alternative UI options (commented for maintainers):
+                               1. Pastel log button (✔ / ✘)
+                               2. Switch toggle
+                               Uncomment one of these if you prefer different interaction styles.
+                            *@
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- ================================
+     Add Habit Modal (glossy)
+     ================================ -->
+<div id="addHabitModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+    <div class="glass-card p-6 w-96">
+        <h2 class="text-lg font-bold mb-4">Add New Habit</h2>
+
+        <!-- Form: category + name + color -->
+        <form id="addHabitForm">
+            <!-- Category dropdown (populated via AJAX from DB) -->
+            <label class="block mb-2">Category</label>
+            <select id="category" name="category" class="habit-input mb-4"></select>
+
+            <!-- Habit name with autocomplete suggestions -->
+            <label class="block mb-2">Habit Name</label>
+            <input type="text"
+                   id="habitName"
+                   name="habitName"
+                   list="habitSuggestions"
+                   class="habit-input mb-2"
+                   placeholder="e.g. Drink Water" />
+            <datalist id="habitSuggestions"></datalist>
+
+            <!-- Color Picker -->
+            <label class="block mb-2">Color</label>
+            <input type="color" id="habitColor" name="habitColor" class="habit-input mb-4" value="#3b82f6" />
+
+            <!-- Modal actions -->
+            <div class="flex justify-end">
+                <button type="submit" class="btn-primary">Save</button>
+                <button type="button" id="closeModal" class="btn-secondary ml-2">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

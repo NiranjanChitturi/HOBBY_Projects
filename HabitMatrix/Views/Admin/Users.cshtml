@@ -1,0 +1,68 @@
+@model List<HabitMatrix.Models.User>
+@{
+    ViewData["Title"] = "User Management - HabitMatrix";
+}
+
+<!-- 
+    Users.cshtml
+    Purpose: Admin interface for managing users.
+    Styling: Uses glass-card container, table-glossy for user list, and pastel buttons from site.css.
+    Notes:
+    - Displays all active users passed in via the model.
+    - Provides actions: Change Role and Soft Delete.
+-->
+
+<div class="container glass-card p-6 mx-auto mt-10">
+    <!-- Header -->
+    <h2 class="text-2xl font-bold mb-4">User Management</h2>
+    <p class="mb-6 text-gray-600">Admins can manage users here.</p>
+
+    <!-- User list table -->
+    <table class="table-glossy w-full">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <!-- Username -->
+                    <td>@user.Username</td>
+
+                    <!-- Email -->
+                    <td>@user.Email</td>
+
+                    <!-- Role -->
+                    <td>@user.Role</td>
+
+                    <!-- Actions -->
+                    <td>
+                        <!-- Change Role -->
+                        <form method="post" asp-action="ChangeRole" asp-controller="Admin" class="inline">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <select name="role" class="habit-input inline w-auto">
+                               @*  <option value="User" @(user.Role == "User" ? "selected" : null)>User</option>
+                                <option value="Admin" @(user.Role == "Admin" ? "selected" : null)>Admin</option>
+                          *@
+                                <option value="User" selected="@(user.Role == "User")">User</option>
+                                <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                      </select>
+                            <button type="submit" class="btn-secondary ml-2">Update</button>
+                        </form>
+
+                        <!-- Soft Delete -->
+                        <form method="post" asp-action="Delete" asp-controller="Admin" class="inline ml-2">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <button type="submit" class="btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

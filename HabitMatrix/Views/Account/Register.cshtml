@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Register - HabitMatrix";
+}
+
+<!--
+    Register.cshtml
+    Purpose: Registration form for new users.
+    Styling: Uses glass-card, btn-primary, and habit-input classes defined in site.css.
+    Notes:
+    - Displays server-side validation errors via ViewBag.Error.
+    - Posts to Account/Register (POST).
+-->
+
+<div class="container glass-card p-8 max-w-md mx-auto mt-20">
+    <!-- Header -->
+    <h2 class="text-3xl font-bold mb-2 text-indigo-700">Create Account</h2>
+    <p class="mb-6 text-gray-600">Sign up to start tracking your habits</p>
+
+    <!-- Error message (shown if controller sets ViewBag.Error) -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+            @ViewBag.Error
+        </div>
+    }
+
+    <!-- Registration form -->
+    <form method="post" asp-action="Register" class="space-y-4">
+        <!-- Username -->
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Username</label>
+            <input type="text" name="username" class="habit-input" required />
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Email</label>
+            <input type="email" name="email" class="habit-input" required />
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Password</label>
+            <input type="password" name="password" class="habit-input" required />
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Confirm Password</label>
+            <input type="password" name="confirmPassword" class="habit-input" required />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary w-full">Register</button>
+    </form>
+
+    <!-- Footer navigation -->
+    <p class="mt-4 text-sm text-gray-500 text-center">
+        Already have an account?
+        <a asp-action="Login" asp-controller="Account" class="text-indigo-600">Login here</a>
+    </p>
+</div>

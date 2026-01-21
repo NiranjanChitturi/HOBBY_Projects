@@ -1,0 +1,159 @@
+﻿@{
+    ViewData["Title"] = "Dashboard - HabitMatrix";
+
+    // Data passed from controller
+    var habits = ViewBag.Habits as List<HabitMatrix.Models.Habit>;
+    var logs = ViewBag.Logs as List<HabitMatrix.Models.HabitLog>;
+    var role = ViewBag.Role as string;
+
+    var recentLogs = ViewBag.RecentLogs as List<HabitMatrix.Models.HabitLog>;
+    var trendData = ViewBag.TrendData as IEnumerable<dynamic>;
+    var categoryCounts = ViewBag.CategoryCounts as Dictionary<string, int>;
+    var streakData = ViewBag.StreakData as Dictionary<string, int>;
+    var topHabits = ViewBag.TopHabits as Dictionary<string, double>; // completion %
+    var weeklyRate = ViewBag.WeeklyRate as double?;                   // weekly completion %
+}
+
+<!-- ================================
+     Dashboard Container
+     ================================ -->
+<div class="container mx-auto mt-10 px-4">
+
+    <!-- ================================
+         Header Section
+         ================================ -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">
+                Welcome, @ViewBag.Username!
+            </h2>
+            <p class="text-gray-600 mt-2">
+                Your HabitMatrix dashboard overview
+            </p>
+        </div>
+
+        <!-- Navigation buttons -->
+        <div class="flex gap-4">
+            <a asp-controller="Habit" asp-action="Board"
+               class="btn-primary">Go to Habit Board</a>
+
+            @if (role == "Admin")
+            {
+                <a asp-controller="Admin" asp-action="Users"
+                   class="btn-danger">Admin Panel</a>
+            }
+        </div>
+    </div>
+
+    <!-- ================================
+         Visualization Row 1
+         ================================ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- Weekly Completion Rate -->
+        <div class="glass-card p-4">
+            <h3 class="text-lg font-semibold mb-2">Weekly Completion Rate</h3>
+            <canvas id="weeklyRateChart" class="w-full h-32"></canvas>
+        </div>
+
+        <!-- Completion Trend -->
+        <div class="glass-card p-4">
+            <h3 class="text-lg font-semibold mb-2">Completion Trend</h3>
+            <canvas id="habitTrendChart" class="w-full h-32"></canvas>
+        </div>
+
+        <!-- Category Distribution -->
+        <div class="glass-card p-4">
+            <h3 class="text-lg font-semibold mb-2">Category Distribution</h3>
+            <canvas id="habitCategoryChart" class="w-full h-32"></canvas>
+        </div>
+    </div>
+
+    <!-- ================================
+         Visualization Row 2
+         ================================ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <!-- Habit Streaks -->
+        <div class="glass-card p-4">
+            <h3 class="text-lg font-semibold mb-2">Habit Streaks</h3>
+            <canvas id="habitStreakChart" class="w-full h-40"></canvas>
+        </div>
+
+        <!-- Top 5 Consistent Habits -->
+        <div class="glass-card p-4">
+            <h3 class="text-lg font-semibold mb-2">Top 5 Consistent Habits</h3>
+            <canvas id="topHabitsChart" class="w-full h-40"></canvas>
+        </div>
+    </div>
+
+    <!-- ================================
+         Content Row (Habits, Logs)
+         ================================ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Habits List -->
+        <div class="glass-card p-4">
+            <h3 class="text-xl font-semibold mb-2">Your Habits</h3>
+            @if (habits != null && habits.Any())
+            {
+                <ul class="space-y-2">
+                    @foreach (var habit in habits)
+                    {
+                        <li class="flex justify-between">
+                            <span style="color:@habit.Color">@habit.Name</span>
+                            <!-- FIX: Null-safe Category -->
+                            <span class="text-sm text-gray-500">
+                                (@(habit?.Category ?? "N/A"))
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-gray-500">
+                    No habits yet.
+                    <a asp-controller="Habit" asp-action="Board" class="text-indigo-600">Add one</a>.
+                </p>
+            }
+        </div>
+
+        <!-- Recent Logs -->
+        <div class="glass-card p-4">
+            <h3 class="text-xl font-semibold mb-2">Recent Logs</h3>
+            @if (logs != null && logs.Any())
+            {
+                <table class="table-glossy w-full text-sm">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in logs.OrderByDescending(l => l.LogDate).Take(10))
+                        {
+                            <tr>
+                                <td>@log.LogDate.ToString("dd-MM-yyyy")</td>
+                                <td>@((log.Status) ? "✔ Completed" : "✘ Missed")</td>
+                                <!-- FIX: Null-safe Notes -->
+                                <td>@(log?.Notes ?? "—")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-gray-500">No logs yet.</p>
+            }
+        </div>
+    </div> <!-- ✅ closes Content Row -->
+
+</div> <!-- ✅ closes Dashboard Container -->
+@section Scripts {
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
+}

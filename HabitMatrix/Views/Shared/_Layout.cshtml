@@ -1,0 +1,71 @@
+﻿@* ================================
+   Layout File for HabitMatrix
+   Handles:
+   - Global head includes
+   - Navigation bar
+   - Theme toggle (light/dark)
+   - Main content placeholder
+   - Footer
+   ================================ *@
+@{
+    // Theme preference comes from DB/claims or defaults to "light"
+    // (no session usage here)
+    var themePref = User?.Claims.FirstOrDefault(c => c.Type == "ThemePreference")?.Value ?? "light";
+    var cssFile = themePref.ToLowerInvariant() == "dark" ? "site-dark.css" : "site.css";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - HabitMatrix</title>
+
+    <!-- Theme Stylesheet -->
+    <link rel="stylesheet" href="~/css/@cssFile" asp-append-version="true" />
+
+    <!-- Tailwind or other global styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" />
+</head>
+<body class="font-sans">
+
+    <!-- Hidden field to sync backend theme with JS -->
+    <input type="hidden" id="themePrefHidden" value="@themePref" />
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 px-6 py-4 flex justify-between items-center z-50">
+        <!-- Brand -->
+        <a href="/" class="text-xl font-bold">HabitMatrix</a>
+
+        <!-- Links -->
+        <div class="space-x-4 flex items-center">
+            <a asp-controller="Home" asp-action="Index" class="nav-link">Dashboard</a>
+            <a asp-controller="Habit" asp-action="Board" class="nav-link">Habit Board</a>
+            <a asp-controller="Admin" asp-action="Users" class="nav-link">Admin</a>
+
+            <!-- Theme Toggle Button with Sun/Moon Icon -->
+            <button id="themeToggle" class="px-2 py-1 rounded transition-transform duration-300">
+                <span id="themeIcon" class="inline-block transform transition-transform duration-300">
+                    @(themePref.ToLowerInvariant() == "dark" ? "☀️" : "🌙")
+                </span>
+            </button>
+
+            <!-- Logout -->
+            <a asp-controller="Account" asp-action="Logout" class="nav-link logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-24">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-10 py-4 text-center">
+        &copy; @DateTime.UtcNow.Year - HabitMatrix
+    </footer>
+
+    <!-- Scripts -->
+    @RenderSection("Scripts", required: false)
+    <script src="~/js/site.js"></script>
+</body>
+</html>

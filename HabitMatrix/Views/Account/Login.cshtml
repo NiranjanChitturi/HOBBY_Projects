@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Login - HabitMatrix";
+}
+
+<!--
+    Login.cshtml
+    Purpose: Login form for existing users.
+    Styling: Uses glass-card, btn-primary, and habit-input classes defined in site.css.
+    Notes:
+    - Displays server-side validation errors via ViewBag.Error.
+    - Posts to Account/Login (POST).
+-->
+<!-- Login Container -->
+<div class="container glass-card p-8 max-w-md mx-auto mt-20">
+    <!-- Header -->
+    <h2 class="text-3xl font-bold mb-2 text-indigo-700">HabitMatrix</h2>
+    <p class="mb-6 text-gray-600">SQL Authentication</p>
+
+    <!-- Error message (shown if controller sets ViewBag.Error) -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+            @ViewBag.Error
+        </div>
+    }
+
+    <!-- Login Form -->
+    <form method="post" asp-action="Login" class="space-y-4">
+        <!-- Username -->
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Username</label>
+            <input type="text" name="username" class="habit-input" required />
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label class="block mb-1 font-semibold text-gray-700">Password</label>
+            <input type="password" name="password" class="habit-input" required />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary w-full">
+            Sign In
+        </button>
+    </form>
+
+    <!-- Footer navigation -->
+    <p class="mt-4 text-sm text-gray-500 text-center">
+        Don’t have an account?
+        <a asp-action="Register" asp-controller="Account" class="text-indigo-600">Register here</a>
+    </p>
+
+    <!-- Optional default credentials note (for testing/demo) -->
+    <p class="mt-2 text-xs text-gray-400 text-center">
+        Default: <span class="font-semibold">admin / admin123</span>
+    </p>
+</div>

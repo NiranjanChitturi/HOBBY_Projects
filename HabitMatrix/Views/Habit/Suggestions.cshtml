@@ -1,0 +1,24 @@
+@model List<HabitMatrix.Models.HabitSuggestion>
+@{
+    ViewData["Title"] = "Habit Suggestions";
+}
+
+<div class="container glass-card p-6 mx-auto mt-10">
+    <h2 class="text-2xl font-bold mb-4">Habit Suggestions</h2>
+    <p class="mb-6 text-gray-600">Pick a habit and customize it before saving.</p>
+
+    <ul class="list-disc pl-6">
+        @foreach (var s in Model)
+        {
+            <li class="mb-4">
+                <strong>@s.Title</strong> - @s.Description
+                <form method="post" asp-action="Create" asp-controller="Habit">
+                    <input type="hidden" name="Name" value="@s.Title" />
+                    <input type="hidden" name="CategoryId" value="@s.CategoryId" />
+                    <input type="hidden" name="Category" value="@(s.Description ?? "General")" />
+                    <button type="submit" class="ml-2 bg-green-600 text-white px-2 py-1 rounded">Add</button>
+                </form>
+            </li>
+        }
+    </ul>
+</div>

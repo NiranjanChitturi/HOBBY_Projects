@@ -1,0 +1,85 @@
+/* Glossy card base */
+.glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+}
+
+    .glass-card:hover {
+        transform: translateY(-2px);
+    }
+
+/* Buttons */
+.btn-primary {
+    @apply bg-indigo-600 text-white px-4 py-2 rounded shadow;
+}
+
+    .btn-primary:hover {
+        @apply bg-indigo-700;
+    }
+
+.btn-danger {
+    @apply bg-red-600 text-white px-4 py-2 rounded shadow;
+}
+
+    .btn-danger:hover {
+        @apply bg-red-700;
+    }
+
+.btn-secondary {
+    @apply bg-gray-300 text-gray-800 px-4 py-2 rounded shadow;
+}
+
+    .btn-secondary:hover {
+        @apply bg-gray-400;
+    }
+
+/* Tables */
+.table-glossy {
+    @apply w-full border-collapse rounded-lg overflow-hidden shadow;
+}
+
+    .table-glossy th {
+        @apply bg-gray-100 text-left px-4 py-2;
+    }
+
+    .table-glossy td {
+        @apply border px-4 py-2;
+    }
+
+    .table-glossy tr:hover {
+        @apply bg-gray-50;
+    }
+
+/* Form inputs */
+input, select, textarea {
+    @apply border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-400;
+}
+
+
+/*.glass-card {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+.table-auto {
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}*/
